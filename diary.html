@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#eee9dd">
+  <meta name="description" content="Дневник Мэгги Фенвик: хроники, люди, заметки, загадки и коллекция воспоминаний.">
+  <title>Хроники Мэгги · личный архив</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="site-shell" id="site-shell">
+    <header class="masthead">
+      <button class="seal" id="home-button" type="button" aria-label="Перейти на главную">✣<span>✣✣</span>✣</button>
+      <nav class="mast-nav" id="mast-nav" aria-label="Основные разделы дневника"></nav>
+      <div class="mast-actions">
+        <span class="mast-caption">M. FENWICK · ARCHIVE</span>
+        <button id="search-button" class="mast-action" type="button" title="Поиск — Ctrl+K" aria-label="Найти в дневнике">⌕ <span>ПОИСК</span></button>
+        <button id="close-button" class="mast-action" type="button" title="Закрыть дневник" aria-label="Закрыть дневник">× <span>ЗАКРЫТЬ</span></button>
+      </div>
+    </header>
+    <main class="workspace" id="workspace" tabindex="-1" aria-live="polite"></main>
+  </div>
+
+  <div class="search-dialog" id="search-dialog" hidden>
+    <div class="search-curtain" data-close-search></div>
+    <section class="search-sheet" role="dialog" aria-modal="true" aria-labelledby="search-title">
+      <div class="bar-title"><span id="search-title">ПОИСК ПО ЗАПИСЯМ</span><button type="button" id="search-dismiss" aria-label="Закрыть поиск">×</button></div>
+      <label class="sr-only" for="search-input">Слово или название</label>
+      <input id="search-input" type="search" autocomplete="off" placeholder="Например: бал, Беа, оборотни...">
+      <div class="search-results" id="search-results"></div>
+      <div class="search-bottom">ENTER — ПЕРЕЙТИ &nbsp; / &nbsp; ESC — ЗАКРЫТЬ &nbsp; / &nbsp; CTRL+K — ПОИСК</div>
+    </section>
+  </div>
+
+  <script src="data.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
