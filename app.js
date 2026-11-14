@@ -63,7 +63,7 @@ function home(){
  pushText(intro,'Здесь собираются заметки по игровым дням, лица, места и некоторый aesthetics.','intro-text');
  pushText(intro,'*Может попасться мета-информация, но это голос свыше.','intro-text');
  left.append(intro);
- const quote=make('div','small-callout');quote.append(lineTitle('ОН СКАЗАЛ ТЕБЕ НУЖНО СЪЕСТЬ БЕЮ, Я СКАЗАЛА ИНТЕРЕСНАЯ МЫСЛЬ:'));pushText(quote,'На данный момент игры: конец первой учебной недели, 06 сентября.','aside-quote');left.append(quote);
+ const quote=make('div','small-callout');quote.append(lineTitle('ОН СКАЗАЛ ТЕБЕ НУЖНО СЪЕСТЬ БЕЮ, Я СКАЗАЛА ПРИКОЛЬНАЯ МЫСЛЬ:'));pushText(quote,'На данный момент игры: конец первой учебной недели, 06 сентября.','aside-quote');left.append(quote);
  left.append(lineTitle('ИМЕЕТСЯ:'));
  const links=make('div','home-links');db.sections.filter(s=>s.id!=='home').forEach(s=>{
   const b=make('button','home-link');b.type='button';b.append(make('span','',s.title),make('span','','↗'));b.addEventListener('click',()=>openPage(s.id,null));links.appendChild(b);
@@ -71,7 +71,7 @@ function home(){
  const leftBottom=make('div','pane-body');pushText(leftBottom,'...','fine-print');left.append(leftBottom);
  // CENTER — stable image, can replace at any time
  const center=make('section','about-center');
- const central=imageSlot(db.art?.titleImage||'assets/castle-hero.png','[ ЦЕНТРАЛЬНАЯ ИЛЛЮСТРАЦИЯ / ЗАМЕНИТЬ В DATA.JS ]','center-image');central.querySelector('img').loading='eager';
+ const central=imageSlot(db.art?.titleImage||'assets/castle-hero.png',);central.querySelector('img').loading='eager';
  center.append(central);
  const centerFooter=make('div','center-credit');centerFooter.append(make('span','','HOGWARTS / THE SAFEST PLACE'),make('span','','M.F. / 01'));center.append(centerFooter);
  // RIGHT — independent scroll, meta layers and quick contents.
@@ -79,9 +79,9 @@ function home(){
  const expl=make('div','pane-body');pushText(expl,'*События живут в отдельных главах. Внутри каждой можно открыть оглавление и перейти сразу к нужному эпизоду.','intro-text');right.append(expl);
  right.append(lineTitle('УРОВНИ ЗНАНИЯ:'));
  const legend=make('div','legend-list');[
-   ['01','Личные записи','Короткие заметки и мысли вне большой хронологии.'],
-   ['02','Хроники','История, которую Мэгги рассказывает от первого лица.'],
-   ['03','Мета-заметки','То, что полезно помнить игроку, даже если Мэгги еще не в курсе.']
+   ['01','Личные записи','Эмоциональное состояние и мысли вне сюжета.'],
+   ['02','Сюжет','Что непосредственно происходило.'],
+   ['03','Мета-информация','Навесы на персонажа во имя эстетики.']
  ].forEach(x=>{const item=make('div','legend-entry');item.append(make('span','legend-num',x[0]));const a=make('div');a.append(make('h3','',x[1]),make('p','',x[2]));item.append(a);legend.append(item);});right.append(legend);
  right.append(lineTitle('БЫСТРОЕ ОГЛАВЛЕНИЕ:'));
  const quick=make('div','quick-index');db.sections.filter(s=>s.id!=='home').forEach(s=>{
@@ -115,7 +115,7 @@ function catalog(section){
    const footer=make('div','card-footer');footer.append(make('p','',page.lead),make('span','','↗'));card.append(footer);
    card.addEventListener('click',()=>openPage(section.id,page.id));grid.append(card);
  });catalog.append(grid);
- const end=make('div','catalog-bottom');end.append(make('span','','КОНЕЦ КАТАЛОГА'),make('span','','✣'),make('span','','ПРОДОЛЖЕНИЕ СЛЕДУЕТ'));catalog.append(end);
+ const end=make('div','catalog-bottom');end.append(make('span','','КОНЕЦ КАТАЛОГА'),make('span','','✣'),make('span','','>>>'));catalog.append(end);
  layout.append(side,catalog);workspace.append(layout);
 }
 function entry(section,page){
