@@ -186,3 +186,7 @@ button:disabled{opacity:.5;cursor:not-allowed}
 
 /* Короткое введение к мета-хронике */
 .chronicle-intro{margin:0;padding:14px 18px 19px;border-bottom:1px solid var(--line);font:18px/1.4 var(--roman);max-width:none;background:var(--paper-light)}
+
+/* v0.5: живые абзацы дневника + маленькая сноска хрониста */
+.chapter-copy + .chapter-copy{margin-top:1.05em}
+.chronicle-credit{margin:0;padding:10px 18px 15px;border-bottom:1px solid var(--line);font:12px/1.5 var(--mono);color:var(--ink-muted);background:var(--paper-light)}

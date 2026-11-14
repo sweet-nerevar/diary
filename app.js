@@ -61,14 +61,14 @@ function home(){
  pushText(intro,'*Перед вами дневник Мэгги Фенвик. И одновременно архив для человека, который пытается успевать за ее приключениями.','intro-text');
  intro.append(imageSlot('assets/diary.png','[ ЗАМЕНЯЕМЫЙ АРТ / 01 ]','intro-art'));
  pushText(intro,'*Здесь собираются заметки по игровым дням, лица, места, странные находки и происшествия, которые хочется помнить.','intro-text');
- pushText(intro,'*Иногда Мэгги знает меньше, чем игрок. Поэтому личные впечатления и внешний взгляд хрониста живут рядом, но не подменяют друг друга.','intro-text');
+ pushText(intro,'*«Хроники» — голос Мэгги. Сведения других героев и заметки игрока попадут в досье и расследования, а не в ее воспоминания.','intro-text');
  left.append(intro);
  const quote=make('div','small-callout');quote.append(lineTitle('НА ПОЛЯХ:'));pushText(quote,'Не обязательно помнить все. Для этого и существует дневник.','aside-quote');left.append(quote);
  left.append(lineTitle('ОТКРЫТЬ КОЛЛЕКЦИЮ:'));
  const links=make('div','home-links');db.sections.filter(s=>s.id!=='home').forEach(s=>{
   const b=make('button','home-link');b.type='button';b.append(make('span','',s.title),make('span','','↗'));b.addEventListener('click',()=>openPage(s.id,null));links.appendChild(b);
  });left.append(links);
- const leftBottom=make('div','pane-body');pushText(leftBottom,'Архив пополняется по мере сверки с хрониками сессий. Сейчас перед нами каркас — не окончательная версия истории.','fine-print');left.append(leftBottom);
+ const leftBottom=make('div','pane-body');pushText(leftBottom,'Главы «Хроник» уже написаны от первого лица. Остальные разделы пока ждут фактов из стенографии Литы.','fine-print');left.append(leftBottom);
  // CENTER — stable image, can replace at any time
  const center=make('section','about-center');
  const central=imageSlot(db.art?.titleImage||'assets/castle-hero.png','[ ЦЕНТРАЛЬНАЯ ИЛЛЮСТРАЦИЯ / ЗАМЕНИТЬ В DATA.JS ]','center-image');central.querySelector('img').loading='eager';
@@ -79,8 +79,8 @@ function home(){
  const expl=make('div','pane-body');pushText(expl,'*События живут в отдельных главах. Внутри каждой можно открыть оглавление и перейти сразу к нужному эпизоду.','intro-text');right.append(expl);
  right.append(lineTitle('УРОВНИ ЗНАНИЯ:'));
  const legend=make('div','legend-list');[
-   ['01','Личные записи','То, как Мэгги сама видела происходящее.'],
-   ['02','Хроники','Хронология и проверяемые события сессий.'],
+   ['01','Личные записи','Короткие заметки и мысли вне большой хронологии.'],
+   ['02','Хроники','История, которую Мэгги рассказывает от первого лица.'],
    ['03','Мета-заметки','То, что полезно помнить игроку, даже если Мэгги еще не в курсе.']
  ].forEach(x=>{const item=make('div','legend-entry');item.append(make('span','legend-num',x[0]));const a=make('div');a.append(make('h3','',x[1]),make('p','',x[2]));item.append(a);legend.append(item);});right.append(legend);
  right.append(lineTitle('БЫСТРОЕ ОГЛАВЛЕНИЕ:'));
@@ -98,14 +98,14 @@ function sectionSidebar(section,activePage){
  const nav=make('nav','directory-nav');nav.setAttribute('aria-label','Страницы раздела');
  section.pages.forEach((page,i)=>nav.append(navRow(section,page,i,activePage&&page.id===activePage.id)));side.append(nav);
  const end=make('div','directory-end');end.append(lineTitle('ИЛЛЮСТРАЦИЯ РАЗДЕЛА:'));end.append(imageSlot(groupArt(section.id),'[ SECTION ART / ЗАМЕНЯЕМЫЙ ]','directory-art'));
- end.append(make('p','directory-footnote',section.id==='chronicle'?'Тексты сверены по рекапу Литы. Иллюстрации пока временные.':'Подписи и иллюстрации пока служебные. Сюжетные факты добавим на следующем этапе.'));
+ end.append(make('p','directory-footnote',section.id==='chronicle'?'Эти главы записаны от лица Мэгги. Сюжетные события сверены по стенографии Литы.':'Подписи и иллюстрации пока служебные. Сюжетные факты добавим на следующем этапе.'));
  side.append(end);return side;
 }
 function catalog(section){
  const layout=make('div','catalog-layout');const side=sectionSidebar(section);const catalog=make('section','catalog-content scroll-pane');
  const title=lineTitle('СОБРАНИЕ / '+galleryNames[section.id],'M. FENWICK / '+section.number);catalog.append(title);
  const inner=make('div','catalog-heading');inner.append(make('h2','',section.title),make('span','catalog-descriptor',motifNames[section.id]+' / '+String(section.pages.length).padStart(2,'0')));catalog.append(inner);
- if(section.intro){const intro=make('p','chronicle-intro',section.intro);catalog.append(intro);}
+ if(section.intro){const intro=make('p','chronicle-intro',section.intro);catalog.append(intro);if(section.credit){catalog.append(make('p','chronicle-credit',section.credit));}}
  const grid=make('div','catalog-grid');
  section.pages.forEach((page,i)=>{
    const card=make('button','catalog-card');card.type='button';card.setAttribute('aria-label','Открыть '+page.title);
@@ -128,11 +128,14 @@ function entry(section,page){
  const title=make('h1','entry-title',page.title);header.append(title,make('p','entry-lead',page.lead));content.append(header);
  const picture=make('figure','entry-figure');picture.append(imageSlot(pageArt(section.id,page.id,'cover'),'[ ОБЛОЖКА ГЛАВЫ / COVER ]','entry-cover'));
  const caption=make('figcaption','','Иллюстрация временная. Свою можно указать в data.js: art.pageImages["'+prefix(section.id,page.id)+'"].cover');picture.append(caption);content.append(picture);
- const articleNote=make('div','entry-note');articleNote.append(make('span','', 'ЗАПИСЬ № '+String(section.pages.indexOf(page)+1).padStart(2,'0')),make('span','',section.id==='chronicle'?'ОСНОВА ПО РЕКАПУ / ПЕРВАЯ РЕДАКЦИЯ':'ФАКТИЧЕСКИЕ ДАННЫЕ ПОКА НЕ ВНЕСЕНЫ'));content.append(articleNote);
+ const articleNote=make('div','entry-note');articleNote.append(make('span','', 'ЗАПИСЬ № '+String(section.pages.indexOf(page)+1).padStart(2,'0')),make('span','',section.id==='chronicle'?'ОТ ЛИЦА МЭГГИ / ЛИТЕРАТУРНАЯ РЕКОНСТРУКЦИЯ':'ФАКТИЧЕСКИЕ ДАННЫЕ ПОКА НЕ ВНЕСЕНЫ'));content.append(articleNote);
  page.blocks.forEach((block,i)=>{
   const sectionBlock=make('section','chapter-block');sectionBlock.id='block-'+block.id;
   const top=make('div','block-meta');top.append(make('span','','0'+(i+1)+' / '+String(page.blocks.length).padStart(2,'0')),make('span','',galleryNames[section.id]));sectionBlock.append(top);
-  sectionBlock.append(make('h2','',block.heading));pushText(sectionBlock,block.text,'chapter-copy');content.append(sectionBlock);
+  sectionBlock.append(make('h2','',block.heading));
+  if(section.id==='chronicle'){block.text.split(/\n\s*\n/).filter(Boolean).forEach(t=>pushText(sectionBlock,t.trim(),'chapter-copy'));}
+  else {pushText(sectionBlock,block.text,'chapter-copy');}
+  content.append(sectionBlock);
   if(i===1){const wide=make('figure','inline-art');wide.id='inline-art';wide.append(imageSlot(pageArt(section.id,page.id,'wide'),'[ ВСТАВКА / 16:9 ]','wide-art'));wide.append(make('figcaption','','Место для дополнительного арта, карты или скриншота.'));content.append(wide);}
  });
  const closer=make('div','entry-end');closer.append(make('span','','✣  КОНЕЦ ЗАПИСИ'));
@@ -144,7 +147,7 @@ function entry(section,page){
  [['Вступление','entry-top'],...page.blocks.map(b=>[b.heading,'block-'+b.id])].forEach(([label,id],i)=>{
    const b=make('button','toc-item');b.type='button';b.append(make('span','',String(i+1).padStart(2,'0')),make('span','',label));b.addEventListener('click',()=>jump(id==='entry-top'?'entry-top':id));tocNav.append(b);
  });toc.append(tocNav);const details=make('div','toc-end');details.append(lineTitle('ПРИМЕЧАНИЕ:'));
- pushText(details,section.id==='chronicle'?'Рекап Литы: стр. '+(page.sourcePages||'—')+'. Это внешняя хроника; личный голос Мэгги появится в разделе «Личные записи».':'Сначала собираем структуру. Позже здесь появятся ссылки на связанных персонажей, предметы и первоисточники.','aside-small');
+ pushText(details,section.id==='chronicle'?'* Спасибо Лите за конспект сессий. Эпизод сверялся со стр. '+(page.sourcePages||'—')+' ее заметок. Здесь только то, что Мэгги пережила сама или услышала от других.':'Сначала собираем структуру. Позже здесь появятся ссылки на связанных персонажей, предметы и первоисточники.','aside-small');
  details.append(imageSlot('assets/diary.png','[ ЗАМЕНЯЕМОЕ ИЗОБРАЖЕНИЕ ]','toc-art'));toc.append(details);
  header.id='entry-top';layout.append(left,content,toc);workspace.append(layout);
 }
