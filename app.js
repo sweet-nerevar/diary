@@ -11,7 +11,7 @@ const $=id=>document.getElementById(id);
 const workspace=$('workspace'),mastNav=$('mast-nav'),dialog=$('search-dialog'),searchInput=$('search-input'),searchResults=$('search-results');
 const prefix=(s,p)=>s+'/'+p;
 const route=(s,p)=>'#'+s+(p?'/'+p:'');
-const galleryNames={chronicle:'ХРОНИКИ',diary:'ЛИЧНЫЕ ЗАПИСИ',people:'ЛЮДИ',mysteries:'РАССЛЕДОВАНИЯ',archive:'АРХИВ'};
+const galleryNames={chronicle:'AFTER EVERY PARTY I DIE',diary:'ЛИЧНЫЕ ЗАПИСИ',people:'ЛЮДИ',mysteries:'РАССЛЕДОВАНИЯ',archive:'АРХИВ'};
 const motifNames={chronicle:'события',diary:'записи',people:'досье',mysteries:'дела',archive:'документы'};
 const make=(tag,klass='',text)=>{const el=document.createElement(tag);if(klass)el.className=klass;if(text!==undefined)el.textContent=text;return el;};
 const withAttrs=(el,attrs)=>{Object.entries(attrs).forEach(([key,value])=>el.setAttribute(key,value));return el;};
@@ -41,7 +41,7 @@ function renderNav(active){
  mastNav.replaceChildren();
  db.sections.forEach((s,i)=>{
    const button=make('button','mast-tab'+(s.id===active?' current':''));button.type='button';
-   button.textContent=s.id==='home'?'О ДНЕВНИКЕ':galleryNames[s.id];
+   button.textContent=s.id==='home'?'MAIN':galleryNames[s.id];
    button.setAttribute('aria-current',s.id===active?'page':'false');
    button.addEventListener('click',()=>openPage(s.id,s.id==='home'?'start':null));
    mastNav.appendChild(button);
@@ -56,24 +56,24 @@ function home(){
  const layout=make('div','about-layout');
  // LEFT — independent scrolling pane, prose and links.
  const left=make('section','about-panel scroll-pane');
- left.append(lineTitle('ВВЕДЕНИЕ В ХРОНИКИ МЭГГИ:','01 / 03'));
+ left.append(lineTitle('РАЗМЫШЛЕНИЯ:','ПРОГУЛЯТЬ ПЕРВЫЙ УРОК / ЧЕХОСЛОВАЦКИЙ ПОЕЗД'));
  const intro=make('div','pane-body intro-prose');
- pushText(intro,'*Перед вами дневник Мэгги Фенвик. И одновременно архив для человека, который пытается успевать за ее приключениями.','intro-text');
+ pushText(intro,'Действия - волевые, результат - поражение.','intro-text');
  intro.append(imageSlot('assets/diary.png','[ ЗАМЕНЯЕМЫЙ АРТ / 01 ]','intro-art'));
- pushText(intro,'*Здесь собираются заметки по игровым дням, лица, места, странные находки и происшествия, которые хочется помнить.','intro-text');
- pushText(intro,'*«Хроники» — голос Мэгги. Сведения других героев и заметки игрока попадут в досье и расследования, а не в ее воспоминания.','intro-text');
+ pushText(intro,'Здесь собираются заметки по игровым дням, лица, места и некоторый aesthetics.','intro-text');
+ pushText(intro,'*Может попасться мета-информация, но это голос свыше.','intro-text');
  left.append(intro);
- const quote=make('div','small-callout');quote.append(lineTitle('НА ПОЛЯХ:'));pushText(quote,'Не обязательно помнить все. Для этого и существует дневник.','aside-quote');left.append(quote);
- left.append(lineTitle('ОТКРЫТЬ КОЛЛЕКЦИЮ:'));
+ const quote=make('div','small-callout');quote.append(lineTitle('ОН СКАЗАЛ ТЕБЕ НУЖНО СЪЕСТЬ БЕЮ, Я СКАЗАЛА ИНТЕРЕСНАЯ МЫСЛЬ:'));pushText(quote,'На данный момент игры: конец первой учебной недели, 06 сентября.','aside-quote');left.append(quote);
+ left.append(lineTitle('ИМЕЕТСЯ:'));
  const links=make('div','home-links');db.sections.filter(s=>s.id!=='home').forEach(s=>{
   const b=make('button','home-link');b.type='button';b.append(make('span','',s.title),make('span','','↗'));b.addEventListener('click',()=>openPage(s.id,null));links.appendChild(b);
  });left.append(links);
- const leftBottom=make('div','pane-body');pushText(leftBottom,'Главы «Хроник» уже написаны от первого лица. Остальные разделы пока ждут фактов из стенографии Литы.','fine-print');left.append(leftBottom);
+ const leftBottom=make('div','pane-body');pushText(leftBottom,'...','fine-print');left.append(leftBottom);
  // CENTER — stable image, can replace at any time
  const center=make('section','about-center');
  const central=imageSlot(db.art?.titleImage||'assets/castle-hero.png','[ ЦЕНТРАЛЬНАЯ ИЛЛЮСТРАЦИЯ / ЗАМЕНИТЬ В DATA.JS ]','center-image');central.querySelector('img').loading='eager';
  center.append(central);
- const centerFooter=make('div','center-credit');centerFooter.append(make('span','','HOGWARTS / PRIVATE COLLECTION'),make('span','','M.F. / VOL. 01'));center.append(centerFooter);
+ const centerFooter=make('div','center-credit');centerFooter.append(make('span','','HOGWARTS / THE SAFEST PLACE'),make('span','','M.F. / 01'));center.append(centerFooter);
  // RIGHT — independent scroll, meta layers and quick contents.
  const right=make('section','about-panel scroll-pane about-right');right.append(lineTitle('КАК УСТРОЕН ЭТОТ АРХИВ:','02 / 03'));
  const expl=make('div','pane-body');pushText(expl,'*События живут в отдельных главах. Внутри каждой можно открыть оглавление и перейти сразу к нужному эпизоду.','intro-text');right.append(expl);
