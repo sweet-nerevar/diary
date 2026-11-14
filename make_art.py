@@ -1,6 +1,3 @@
-"""Генерирует ОРИГИНАЛЬНЫЕ временные дизеринг-иллюстрации без сторонних ассетов.
-Заменяются пользовательскими файлами через data.js. Не нужны для runtime.
-"""
 from PIL import Image, ImageDraw
 import math, random, json, re, os
 from pathlib import Path

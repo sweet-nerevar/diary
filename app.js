@@ -98,13 +98,14 @@ function sectionSidebar(section,activePage){
  const nav=make('nav','directory-nav');nav.setAttribute('aria-label','Страницы раздела');
  section.pages.forEach((page,i)=>nav.append(navRow(section,page,i,activePage&&page.id===activePage.id)));side.append(nav);
  const end=make('div','directory-end');end.append(lineTitle('ИЛЛЮСТРАЦИЯ РАЗДЕЛА:'));end.append(imageSlot(groupArt(section.id),'[ SECTION ART / ЗАМЕНЯЕМЫЙ ]','directory-art'));
- end.append(make('p','directory-footnote','Подписи и иллюстрации пока служебные. Сюжетные факты добавим на следующем этапе.'));
+ end.append(make('p','directory-footnote',section.id==='chronicle'?'Тексты сверены по рекапу Литы. Иллюстрации пока временные.':'Подписи и иллюстрации пока служебные. Сюжетные факты добавим на следующем этапе.'));
  side.append(end);return side;
 }
 function catalog(section){
  const layout=make('div','catalog-layout');const side=sectionSidebar(section);const catalog=make('section','catalog-content scroll-pane');
  const title=lineTitle('СОБРАНИЕ / '+galleryNames[section.id],'M. FENWICK / '+section.number);catalog.append(title);
  const inner=make('div','catalog-heading');inner.append(make('h2','',section.title),make('span','catalog-descriptor',motifNames[section.id]+' / '+String(section.pages.length).padStart(2,'0')));catalog.append(inner);
+ if(section.intro){const intro=make('p','chronicle-intro',section.intro);catalog.append(intro);}
  const grid=make('div','catalog-grid');
  section.pages.forEach((page,i)=>{
    const card=make('button','catalog-card');card.type='button';card.setAttribute('aria-label','Открыть '+page.title);
@@ -127,7 +128,7 @@ function entry(section,page){
  const title=make('h1','entry-title',page.title);header.append(title,make('p','entry-lead',page.lead));content.append(header);
  const picture=make('figure','entry-figure');picture.append(imageSlot(pageArt(section.id,page.id,'cover'),'[ ОБЛОЖКА ГЛАВЫ / COVER ]','entry-cover'));
  const caption=make('figcaption','','Иллюстрация временная. Свою можно указать в data.js: art.pageImages["'+prefix(section.id,page.id)+'"].cover');picture.append(caption);content.append(picture);
- const articleNote=make('div','entry-note');articleNote.append(make('span','', 'ЗАПИСЬ № '+String(section.pages.indexOf(page)+1).padStart(2,'0')),make('span','','ФАКТИЧЕСКИЕ ДАННЫЕ ПОКА НЕ ВНЕСЕНЫ'));content.append(articleNote);
+ const articleNote=make('div','entry-note');articleNote.append(make('span','', 'ЗАПИСЬ № '+String(section.pages.indexOf(page)+1).padStart(2,'0')),make('span','',section.id==='chronicle'?'ОСНОВА ПО РЕКАПУ / ПЕРВАЯ РЕДАКЦИЯ':'ФАКТИЧЕСКИЕ ДАННЫЕ ПОКА НЕ ВНЕСЕНЫ'));content.append(articleNote);
  page.blocks.forEach((block,i)=>{
   const sectionBlock=make('section','chapter-block');sectionBlock.id='block-'+block.id;
   const top=make('div','block-meta');top.append(make('span','','0'+(i+1)+' / '+String(page.blocks.length).padStart(2,'0')),make('span','',galleryNames[section.id]));sectionBlock.append(top);
@@ -143,7 +144,7 @@ function entry(section,page){
  [['Вступление','entry-top'],...page.blocks.map(b=>[b.heading,'block-'+b.id])].forEach(([label,id],i)=>{
    const b=make('button','toc-item');b.type='button';b.append(make('span','',String(i+1).padStart(2,'0')),make('span','',label));b.addEventListener('click',()=>jump(id==='entry-top'?'entry-top':id));tocNav.append(b);
  });toc.append(tocNav);const details=make('div','toc-end');details.append(lineTitle('ПРИМЕЧАНИЕ:'));
- pushText(details,'Сначала собираем структуру. Позже здесь появятся ссылки на связанных персонажей, предметы и первоисточники.','aside-small');
+ pushText(details,section.id==='chronicle'?'Рекап Литы: стр. '+(page.sourcePages||'—')+'. Это внешняя хроника; личный голос Мэгги появится в разделе «Личные записи».':'Сначала собираем структуру. Позже здесь появятся ссылки на связанных персонажей, предметы и первоисточники.','aside-small');
  details.append(imageSlot('assets/diary.png','[ ЗАМЕНЯЕМОЕ ИЗОБРАЖЕНИЕ ]','toc-art'));toc.append(details);
  header.id='entry-top';layout.append(left,content,toc);workspace.append(layout);
 }

@@ -183,3 +183,6 @@ button:disabled{opacity:.5;cursor:not-allowed}
  .center-credit{font-size:8px}.catalog-descriptor{font-size:9px}.card-heading{min-height:86px}
 }
 @media(prefers-reduced-motion:reduce){*,*::before,*::after{scroll-behavior:auto!important;animation:none!important;transition:none!important}}
+
+/* Короткое введение к мета-хронике */
+.chronicle-intro{margin:0;padding:14px 18px 19px;border-bottom:1px solid var(--line);font:18px/1.4 var(--roman);max-width:none;background:var(--paper-light)}
