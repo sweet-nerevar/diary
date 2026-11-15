@@ -30,14 +30,7 @@
     ];
   };
   const page = (id, title, lead, kind='standard') => ({ id, title, lead, status:'КАРКАС', blocks:template(kind) });
-
-  // ПУТИ К СВОИМ КАРТИНКАМ (все необязательные):
-  // Свой файл кладем в assets/, например: 'assets/my-cover.png'.
-  // titleImage — статичная центральная иллюстрация на главной,
-  // sectionImages — превью разделов в галерее,
-  // pageImages — иллюстрации конкретных страниц (ключ: 'chronicle/ball').
-  //   card — карточка в каталоге, cover — главная иллюстрация записи, wide — вставка в тексте.
-  // Если ничего не указывать — остаются временные дизеринг-иллюстрации из assets/.
+  
   const art = {
     titleImage: '',
     sectionImages: {

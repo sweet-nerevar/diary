@@ -1,6 +1,4 @@
 /*
-  ХРОНИКИ МЭГГИ v0.3 / PAPER ARCHIVE
-  Интерфейс не зависит от иллюстраций. Все страницы берутся из data.js.
   Маршруты: #home/start; #chronicle (каталог); #chronicle/ball (глава).
 */
 (()=>{
@@ -83,12 +81,38 @@ function home(){
    ['02','Сюжет','Что непосредственно происходило.'],
    ['03','Мета-информация','Навесы на персонажа во имя эстетики.']
  ].forEach(x=>{const item=make('div','legend-entry');item.append(make('span','legend-num',x[0]));const a=make('div');a.append(make('h3','',x[1]),make('p','',x[2]));item.append(a);legend.append(item);});right.append(legend);
- right.append(lineTitle('БЫСТРОЕ ОГЛАВЛЕНИЕ:'));
- const quick=make('div','quick-index');db.sections.filter(s=>s.id!=='home').forEach(s=>{
-  const a=make('button','quick-item');a.type='button';a.append(make('span','quick-num',s.number),make('span','',s.title),make('span','','→'));a.addEventListener('click',()=>openPage(s.id,null));quick.append(a);
- });right.append(quick);
- const t=make('div','pane-body');t.append(imageSlot('assets/archive.png','[ МЕСТО ДЛЯ МИНИ-ИЛЛЮСТРАЦИИ ]','bottom-art'));pushText(t,'«Самые удивительные истории обычно начинаются с чего-нибудь совершенно неуместного».','aside-quote');right.append(t);
- layout.append(left,center,right);workspace.append(layout);
+// ГАРДЕРОБ МЭГГИ: подгружаем отдельный модуль, не ломая главную страницу.
+  const wardrobeMount = make('div', 'maggie-wardrobe-mount');
+  right.append(wardrobeMount);
+  const showWardrobeError = (message, err) => {
+    console.error('[Maggie Wardrobe]', message, err || '');
+    const notice = make('div', 'pane-body');
+    notice.append(make('strong', '', 'Гардероб не загрузился'));
+    notice.append(make('p', 'aside-small', message));
+    wardrobeMount.replaceChildren(notice);
+  };
+  const mountWardrobe = () => {
+    if (!wardrobeMount.isConnected) return;
+    if (typeof window.createMaggieWardrobe !== 'function') {
+      showWardrobeError('Скрипт найден, но функция createMaggieWardrobe недоступна. Проверь консоль браузера.');
+      return;
+    }
+    try { wardrobeMount.replaceChildren(window.createMaggieWardrobe()); }
+    catch (err) { showWardrobeError('Ошибка запуска гардероба: ' + err.message, err); }
+  };
+  if (typeof window.createMaggieWardrobe === 'function') {
+    queueMicrotask(mountWardrobe);
+  } else {
+    wardrobeMount.append(make('p', 'pane-body', 'Загружаю гардероб Мэгги…'));
+    const wardrobeScript = document.createElement('script');
+    wardrobeScript.src = new URL('maggie-wardrobe/maggie-wardrobe.js', document.baseURI).href;
+    wardrobeScript.onload = mountWardrobe;
+    wardrobeScript.onerror = () => showWardrobeError('Не найден maggie-wardrobe/maggie-wardrobe.js.');
+    document.head.append(wardrobeScript);
+  }
+
+layout.append(left,center,right);
+workspace.append(layout);
 }
 function sectionSidebar(section,activePage){
  const side=make('aside','directory-pane scroll-pane');
