@@ -9,8 +9,8 @@ const $=id=>document.getElementById(id);
 const workspace=$('workspace'),mastNav=$('mast-nav'),dialog=$('search-dialog'),searchInput=$('search-input'),searchResults=$('search-results');
 const prefix=(s,p)=>s+'/'+p;
 const route=(s,p)=>'#'+s+(p?'/'+p:'');
-const galleryNames={chronicle:'AFTER EVERY PARTY I DIE',diary:'ЛИЧНЫЕ ЗАПИСИ',people:'ЛЮДИ',mysteries:'РАССЛЕДОВАНИЯ',archive:'АРХИВ'};
-const motifNames={chronicle:'события',diary:'записи',people:'досье',mysteries:'дела',archive:'документы'};
+const galleryNames={chronicle:'СЮЖЕТ',people:'ЛЮДИ',mysteries:'ОРГАНИЗАЦИИ',diary:'РАЗНОЕ',archive:'АРХИВ'};
+const motifNames={chronicle:'события',people:'досье',mysteries:'дела',diary:'записи',archive:'документы'};
 const make=(tag,klass='',text)=>{const el=document.createElement(tag);if(klass)el.className=klass;if(text!==undefined)el.textContent=text;return el;};
 const withAttrs=(el,attrs)=>{Object.entries(attrs).forEach(([key,value])=>el.setAttribute(key,value));return el;};
 const groupArt=s=> db.art?.sectionImages?.[s] || `assets/${s}.png`;
@@ -54,10 +54,10 @@ function home(){
  const layout=make('div','about-layout');
  // LEFT — independent scrolling pane, prose and links.
  const left=make('section','about-panel scroll-pane');
- left.append(lineTitle('РАЗМЫШЛЕНИЯ:','ПРОГУЛЯТЬ ПЕРВЫЙ УРОК / ЧЕХОСЛОВАЦКИЙ ПОЕЗД'));
+ left.append(lineTitle('РАЗМЫШЛЕНИЯ:','ДАТЬ ЛЕЩА / СЛОМАТЬ КОЛЕНИ'));
  const intro=make('div','pane-body intro-prose');
  pushText(intro,'Действия - волевые, результат - поражение.','intro-text');
- intro.append(imageSlot('assets/diary.png','[ ЗАМЕНЯЕМЫЙ АРТ / 01 ]','intro-art'));
+ intro.append(imageSlot('assets/diary.png','INTRO ART','intro-art'));
  pushText(intro,'Здесь собираются заметки по игровым дням, лица, места и некоторый aesthetics.','intro-text');
  pushText(intro,'*Может попасться мета-информация, но это голос свыше.','intro-text');
  left.append(intro);
@@ -81,7 +81,7 @@ function home(){
    ['02','Сюжет','Что непосредственно происходило.'],
    ['03','Мета-информация','Навесы на персонажа во имя эстетики.']
  ].forEach(x=>{const item=make('div','legend-entry');item.append(make('span','legend-num',x[0]));const a=make('div');a.append(make('h3','',x[1]),make('p','',x[2]));item.append(a);legend.append(item);});right.append(legend);
-// ГАРДЕРОБ МЭГГИ: подгружаем отдельный модуль, не ломая главную страницу.
+
   const wardrobeMount = make('div', 'maggie-wardrobe-mount');
   right.append(wardrobeMount);
   const showWardrobeError = (message, err) => {
@@ -122,7 +122,7 @@ function sectionSidebar(section,activePage){
  const nav=make('nav','directory-nav');nav.setAttribute('aria-label','Страницы раздела');
  section.pages.forEach((page,i)=>nav.append(navRow(section,page,i,activePage&&page.id===activePage.id)));side.append(nav);
  const end=make('div','directory-end');end.append(lineTitle('ИЛЛЮСТРАЦИЯ РАЗДЕЛА:'));end.append(imageSlot(groupArt(section.id),'[ SECTION ART / ЗАМЕНЯЕМЫЙ ]','directory-art'));
- end.append(make('p','directory-footnote',section.id==='chronicle'?'Эти главы записаны от лица Мэгги. Сюжетные события сверены по стенографии Литы.':'Подписи и иллюстрации пока служебные. Сюжетные факты добавим на следующем этапе.'));
+ end.append(make('p','directory-footnote',section.id==='chronicle'?'Эти главы записаны от лица Мэгги. Сюжетные события сверены по записям Литы.':'.'));
  side.append(end);return side;
 }
 function catalog(section){
@@ -150,17 +150,17 @@ function entry(section,page){
  const header=make('header','entry-header');
  const crumbs=make('div','breadcrumbs');const back=make('button','','← '+section.title);back.type='button';back.addEventListener('click',()=>openPage(section.id,null));crumbs.append(back,make('span','','/ '+page.title));header.append(crumbs);
  const title=make('h1','entry-title',page.title);header.append(title,make('p','entry-lead',page.lead));content.append(header);
- const picture=make('figure','entry-figure');picture.append(imageSlot(pageArt(section.id,page.id,'cover'),'[ ОБЛОЖКА ГЛАВЫ / COVER ]','entry-cover'));
- const caption=make('figcaption','','Иллюстрация временная. Свою можно указать в data.js: art.pageImages["'+prefix(section.id,page.id)+'"].cover');picture.append(caption);content.append(picture);
- const articleNote=make('div','entry-note');articleNote.append(make('span','', 'ЗАПИСЬ № '+String(section.pages.indexOf(page)+1).padStart(2,'0')),make('span','',section.id==='chronicle'?'ОТ ЛИЦА МЭГГИ / ЛИТЕРАТУРНАЯ РЕКОНСТРУКЦИЯ':'ФАКТИЧЕСКИЕ ДАННЫЕ ПОКА НЕ ВНЕСЕНЫ'));content.append(articleNote);
+ const picture=make('figure','entry-figure');picture.append(imageSlot(pageArt(section.id,page.id,'cover'),'[ / COVER ]','entry-cover'));
+ const caption=make('figcaption','','');picture.append(caption);content.append(picture);
+ const articleNote=make('div','entry-note');articleNote.append(make('span','', 'ЗАПИСЬ № '+String(section.pages.indexOf(page)+1).padStart(2,'0')),make('span','',section.id==='chronicle'?'/ ОТ ЛИЦА МЭГГИ':'ФАКТИЧЕСКИЕ ДАННЫЕ ПОКА НЕ ВНЕСЕНЫ'));content.append(articleNote);
  page.blocks.forEach((block,i)=>{
   const sectionBlock=make('section','chapter-block');sectionBlock.id='block-'+block.id;
   const top=make('div','block-meta');top.append(make('span','','0'+(i+1)+' / '+String(page.blocks.length).padStart(2,'0')),make('span','',galleryNames[section.id]));sectionBlock.append(top);
   sectionBlock.append(make('h2','',block.heading));
-  if(section.id==='chronicle'){block.text.split(/\n\s*\n/).filter(Boolean).forEach(t=>pushText(sectionBlock,t.trim(),'chapter-copy'));}
+  if(['chronicle', 'people', 'mysteries', 'diary'].includes(section.id)){block.text.split(/\n\s*\n/).filter(Boolean).forEach(t=>pushText(sectionBlock,t.trim(),'chapter-copy'));}
   else {pushText(sectionBlock,block.text,'chapter-copy');}
   content.append(sectionBlock);
-  if(i===1){const wide=make('figure','inline-art');wide.id='inline-art';wide.append(imageSlot(pageArt(section.id,page.id,'wide'),'[ ВСТАВКА / 16:9 ]','wide-art'));wide.append(make('figcaption','','Место для дополнительного арта, карты или скриншота.'));content.append(wide);}
+  if(i===1){const wide=make('figure','inline-art');wide.id='inline-art';wide.append(imageSlot(pageArt(section.id,page.id,'wide'),'[/ 16:9 ]','wide-art'));wide.append(make('figcaption','','.'));content.append(wide);}
  });
  const closer=make('div','entry-end');closer.append(make('span','','✣  КОНЕЦ ЗАПИСИ'));
  const next=section.pages[section.pages.indexOf(page)+1];if(next){const b=make('button','','СЛЕДУЮЩАЯ: '+next.title+' ↗');b.type='button';b.addEventListener('click',()=>openPage(section.id,next.id));closer.append(b);}
@@ -168,10 +168,10 @@ function entry(section,page){
  const toc=make('aside','entry-toc scroll-pane');toc.append(lineTitle('В ЭТОЙ ГЛАВЕ:'));
  const tocNav=make('nav','toc-nav');tocNav.setAttribute('aria-label','Оглавление главы');
  function jump(id){const dest=content.querySelector('#'+CSS.escape(id));if(dest)dest.scrollIntoView({behavior:window.matchMedia('(prefers-reduced-motion:reduce)').matches?'auto':'smooth',block:'start'});}
- [['Вступление','entry-top'],...page.blocks.map(b=>[b.heading,'block-'+b.id])].forEach(([label,id],i)=>{
+ [['00','entry-top'],...page.blocks.map(b=>[b.heading,'block-'+b.id])].forEach(([label,id],i)=>{
    const b=make('button','toc-item');b.type='button';b.append(make('span','',String(i+1).padStart(2,'0')),make('span','',label));b.addEventListener('click',()=>jump(id==='entry-top'?'entry-top':id));tocNav.append(b);
  });toc.append(tocNav);const details=make('div','toc-end');details.append(lineTitle('ПРИМЕЧАНИЕ:'));
- pushText(details,section.id==='chronicle'?'* Спасибо Лите за конспект сессий. Эпизод сверялся со стр. '+(page.sourcePages||'—')+' ее заметок. Здесь только то, что Мэгги пережила сама или услышала от других.':'Сначала собираем структуру. Позже здесь появятся ссылки на связанных персонажей, предметы и первоисточники.','aside-small');
+ pushText(details,section.id==='chronicle'?'.':'.','aside-small');
  details.append(imageSlot('assets/diary.png','[ ЗАМЕНЯЕМОЕ ИЗОБРАЖЕНИЕ ]','toc-art'));toc.append(details);
  header.id='entry-top';layout.append(left,content,toc);workspace.append(layout);
 }
