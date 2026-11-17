@@ -57,7 +57,7 @@ function home(){
  left.append(lineTitle('РАЗМЫШЛЕНИЯ:','ДАТЬ ЛЕЩА / СЛОМАТЬ КОЛЕНИ'));
  const intro=make('div','pane-body intro-prose');
  pushText(intro,'Действия - волевые, результат - поражение.','intro-text');
- intro.append(imageSlot('assets/diary.png','INTRO ART','intro-art'));
+ intro.append(imageSlot('assets/05-arkhiv.png','INTRO ART','intro-art'));
  pushText(intro,'Здесь собираются заметки по игровым дням, лица, места и некоторый aesthetics.','intro-text');
  pushText(intro,'*Может попасться мета-информация, но это голос свыше.','intro-text');
  left.append(intro);
@@ -121,7 +121,7 @@ function sectionSidebar(section,activePage){
  side.append(lineTitle('СОДЕРЖАНИЕ:'));
  const nav=make('nav','directory-nav');nav.setAttribute('aria-label','Страницы раздела');
  section.pages.forEach((page,i)=>nav.append(navRow(section,page,i,activePage&&page.id===activePage.id)));side.append(nav);
- const end=make('div','directory-end');end.append(lineTitle('ИЛЛЮСТРАЦИЯ РАЗДЕЛА:'));end.append(imageSlot(groupArt(section.id),'[ SECTION ART / ЗАМЕНЯЕМЫЙ ]','directory-art'));
+ const end=make('div','directory-end');end.append(lineTitle('✎:'));end.append(imageSlot(groupArt(section.id),'[ SECTION ART ]','directory-art'));
  end.append(make('p','directory-footnote',section.id==='chronicle'?'Эти главы записаны от лица Мэгги. Сюжетные события сверены по записям Литы.':'.'));
  side.append(end);return side;
 }
@@ -139,7 +139,7 @@ function catalog(section){
    const footer=make('div','card-footer');footer.append(make('p','',page.lead),make('span','','↗'));card.append(footer);
    card.addEventListener('click',()=>openPage(section.id,page.id));grid.append(card);
  });catalog.append(grid);
- const end=make('div','catalog-bottom');end.append(make('span','','КОНЕЦ КАТАЛОГА'),make('span','','✣'),make('span','','>>>'));catalog.append(end);
+ const end=make('div','catalog-bottom');end.append(make('span','','<<<'),make('span','','✣'),make('span','','>>>'));catalog.append(end);
  layout.append(side,catalog);workspace.append(layout);
 }
 function entry(section,page){
@@ -171,8 +171,8 @@ function entry(section,page){
  [['00','entry-top'],...page.blocks.map(b=>[b.heading,'block-'+b.id])].forEach(([label,id],i)=>{
    const b=make('button','toc-item');b.type='button';b.append(make('span','',String(i+1).padStart(2,'0')),make('span','',label));b.addEventListener('click',()=>jump(id==='entry-top'?'entry-top':id));tocNav.append(b);
  });toc.append(tocNav);const details=make('div','toc-end');details.append(lineTitle('ПРИМЕЧАНИЕ:'));
- pushText(details,section.id==='chronicle'?'.':'.','aside-small');
- details.append(imageSlot('assets/diary.png','[ ЗАМЕНЯЕМОЕ ИЗОБРАЖЕНИЕ ]','toc-art'));toc.append(details);
+ pushText(details,section.id==='chronicle'?'':'','aside-small');
+ details.append(imageSlot('assets/diary.png','[ TOC ART ]','toc-art'));toc.append(details);
  header.id='entry-top';layout.append(left,content,toc);workspace.append(layout);
 }
 function render(){
