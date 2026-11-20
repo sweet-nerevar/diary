@@ -39,7 +39,7 @@ function renderNav(active){
  mastNav.replaceChildren();
  db.sections.forEach((s,i)=>{
    const button=make('button','mast-tab'+(s.id===active?' current':''));button.type='button';
-   button.textContent=s.id==='home'?'MAIN':galleryNames[s.id];
+   button.textContent=s.id==='home'?'ГЛАВНАЯ':galleryNames[s.id];
    button.setAttribute('aria-current',s.id===active?'page':'false');
    button.addEventListener('click',()=>openPage(s.id,s.id==='home'?'start':null));
    mastNav.appendChild(button);
@@ -114,18 +114,103 @@ function home(){
 layout.append(left,center,right);
 workspace.append(layout);
 }
+/* ARCHIVE: independent image gallery, no record pages. */
+function archiveImages(section){
+ const configured=db.art?.archiveGallery;
+ if(Array.isArray(configured)){
+  return configured.map((item,i)=>{
+   if(typeof item==='string')return {src:item,alt:'Архив · изображение '+(i+1)};
+   if(item && typeof item==='object')return {src:item.src||item.image||'',alt:item.alt||item.title||'Архив · изображение '+(i+1)};
+   return null;
+  }).filter(item=>item && typeof item.src==='string' && item.src.trim());
+ }
+ // If there is no archiveGallery array yet, reuse already configured archive cover images.
+ return section.pages.map(page=>{
+  const images=db.art?.pageImages?.[prefix('archive',page.id)];
+  const src=images?.cover||images?.card||images?.wide;
+  return src?{src,alt:page.title}:null;
+ }).filter(Boolean);
+}
+function installArchiveGalleryStyles(){
+ if(document.getElementById('maggie-archive-gallery-styles'))return;
+ const style=make('style');style.id='maggie-archive-gallery-styles';
+ style.textContent=`
+ .archive-gallery-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(175px,1fr));gap:12px;margin:22px 0 32px;align-items:start}
+ .archive-gallery-thumb{display:block;position:relative;width:100%;min-width:0;aspect-ratio:1 / 1;overflow:hidden;padding:0;border:1px solid #302b24;background:#e9e1d2;border-radius:0;cursor:zoom-in;line-height:0}
+ .archive-gallery-thumb img{display:block;width:100%;height:100%;object-fit:cover;transition:transform .25s ease}
+ .archive-gallery-thumb:hover img{transform:scale(1.035)}
+ .archive-gallery-thumb:focus-visible{outline:3px solid #302b24;outline-offset:3px}
+ .archive-gallery-empty{padding:32px 10px;text-align:center;opacity:.75}
+ dialog.maggie-archive-lightbox{box-sizing:border-box;position:fixed;inset:0;margin:auto;padding:20px;border:1px solid #29241f;border-radius:0;background:#e9e1d2;box-shadow:0 18px 90px #0009;max-width:94vw;max-height:94vh;width:max-content;overflow:visible}
+ dialog.maggie-archive-lightbox::backdrop{background:rgba(10,9,8,.87);backdrop-filter:blur(5px)}
+ .maggie-archive-lightbox img{display:block;max-width:calc(94vw - 42px);max-height:calc(94vh - 42px);width:auto;height:auto;object-fit:contain}
+ .maggie-archive-close{position:absolute;z-index:2;top:-16px;right:-16px;display:grid;place-items:center;width:36px;height:36px;border:1px solid #29241f;border-radius:50%;background:#e9e1d2;color:#29241f;cursor:pointer;font-size:24px;line-height:1}
+ .maggie-archive-close:focus-visible{outline:3px solid white;outline-offset:3px}
+ @media(max-width:650px){.archive-gallery-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin-top:16px}dialog.maggie-archive-lightbox{padding:12px}.maggie-archive-lightbox img{max-width:calc(94vw - 26px);max-height:calc(94vh - 26px)}.maggie-archive-close{right:-10px;top:-10px}}
+ @media(prefers-reduced-motion:reduce){.archive-gallery-thumb img{transition:none}}
+ `;
+ document.head.append(style);
+}
+let archiveLightbox=null;
+function openArchiveLightbox(item){
+ installArchiveGalleryStyles();
+ if(!archiveLightbox){
+  const modal=make('dialog','maggie-archive-lightbox');
+  modal.setAttribute('aria-label','Просмотр изображения из архива');
+  const img=make('img');
+  const close=make('button','maggie-archive-close','×');close.type='button';close.setAttribute('aria-label','Закрыть изображение');
+  close.addEventListener('click',()=>modal.close());
+  modal.append(img,close);
+  modal.addEventListener('click',event=>{if(event.target===modal)modal.close();});
+  document.body.append(modal);
+  archiveLightbox={modal,img};
+ }
+ archiveLightbox.img.src=item.src;
+ archiveLightbox.img.alt=item.alt;
+ if(!archiveLightbox.modal.open)archiveLightbox.modal.showModal();
+}
 function sectionSidebar(section,activePage){
+ const isArchive=section.id==='archive';
  const side=make('aside','directory-pane scroll-pane');
- side.append(lineTitle('РАЗДЕЛ '+section.number+' / '+galleryNames[section.id],String(section.pages.length).padStart(2,'0')+' ЗАПИСЕЙ'));
+ const count=isArchive?archiveImages(section).length:section.pages.length;
+ side.append(lineTitle('РАЗДЕЛ '+section.number+' / '+galleryNames[section.id],String(count).padStart(2,'0')+(isArchive?' ИЗОБРАЖЕНИЙ':' ЗАПИСЕЙ')));
  const text=make('div','directory-intro');text.append(make('div','directory-number','0'+Number(section.number)),make('h1','',section.title),make('p','',section.description));side.append(text);
- side.append(lineTitle('СОДЕРЖАНИЕ:'));
- const nav=make('nav','directory-nav');nav.setAttribute('aria-label','Страницы раздела');
- section.pages.forEach((page,i)=>nav.append(navRow(section,page,i,activePage&&page.id===activePage.id)));side.append(nav);
+ if(!isArchive){
+  side.append(lineTitle('СОДЕРЖАНИЕ:'));
+  const nav=make('nav','directory-nav');nav.setAttribute('aria-label','Страницы раздела');
+  section.pages.forEach((page,i)=>nav.append(navRow(section,page,i,activePage&&page.id===activePage.id)));side.append(nav);
+ }
  const end=make('div','directory-end');end.append(lineTitle('✎:'));end.append(imageSlot(groupArt(section.id),'[ SECTION ART ]','directory-art'));
- end.append(make('p','directory-footnote',section.id==='chronicle'?'Эти главы записаны от лица Мэгги. Сюжетные события сверены по записям Литы.':'.'));
+ if(!isArchive)end.append(make('p','directory-footnote',section.id==='chronicle'?'Эти главы записаны от лица Мэгги. Сюжетные события сверены по записям Литы.':'.'));
  side.append(end);return side;
 }
+function archiveGallery(section){
+ installArchiveGalleryStyles();
+ const items=archiveImages(section);
+ const layout=make('div','catalog-layout');
+ const side=sectionSidebar(section);
+ const catalog=make('section','catalog-content scroll-pane archive-gallery-content');
+ catalog.append(lineTitle('СОБРАНИЕ / АРХИВ','M. FENWICK / '+section.number));
+ const inner=make('div','catalog-heading');inner.append(make('h2','',section.title),make('span','catalog-descriptor','изображения / '+String(items.length).padStart(2,'0')));catalog.append(inner);
+ if(section.intro)catalog.append(make('p','chronicle-intro',section.intro));
+ if(items.length){
+  const grid=make('div','archive-gallery-grid');
+  items.forEach((item,i)=>{
+   const button=make('button','archive-gallery-thumb');button.type='button';
+   button.setAttribute('aria-label','Открыть изображение '+(i+1));
+   const img=make('img');img.src=item.src;img.alt=item.alt;img.loading='lazy';img.decoding='async';
+   button.append(img);
+   button.addEventListener('click',()=>openArchiveLightbox(item));
+   grid.append(button);
+  });
+  catalog.append(grid);
+ }else{
+  catalog.append(make('p','archive-gallery-empty','Здесь появятся иллюстрации. Добавь пути к файлам в art.archiveGallery в data.js.'));
+ }
+ layout.append(side,catalog);workspace.append(layout);
+}
 function catalog(section){
+ if(section.id==='archive'){archiveGallery(section);return;}
  const layout=make('div','catalog-layout');const side=sectionSidebar(section);const catalog=make('section','catalog-content scroll-pane');
  const title=lineTitle('СОБРАНИЕ / '+galleryNames[section.id],'M. FENWICK / '+section.number);catalog.append(title);
  const inner=make('div','catalog-heading');inner.append(make('h2','',section.title),make('span','catalog-descriptor',motifNames[section.id]+' / '+String(section.pages.length).padStart(2,'0')));catalog.append(inner);
@@ -160,7 +245,7 @@ function entry(section,page){
   if(['chronicle', 'people', 'mysteries', 'diary'].includes(section.id)){block.text.split(/\n\s*\n/).filter(Boolean).forEach(t=>pushText(sectionBlock,t.trim(),'chapter-copy'));}
   else {pushText(sectionBlock,block.text,'chapter-copy');}
   content.append(sectionBlock);
-  if(i===1){const wide=make('figure','inline-art');wide.id='inline-art';wide.append(imageSlot(pageArt(section.id,page.id,'wide'),'[/ 16:9 ]','wide-art'));wide.append(make('figcaption','','.'));content.append(wide);}
+  if(i===1 && section.id!=='people'){const wide=make('figure','inline-art');wide.id='inline-art';wide.append(imageSlot(pageArt(section.id,page.id,'wide'),'[/ 16:9 ]','wide-art'));wide.append(make('figcaption','','.'));content.append(wide);}
  });
  const closer=make('div','entry-end');closer.append(make('span','','✣  КОНЕЦ ЗАПИСИ'));
  const next=section.pages[section.pages.indexOf(page)+1];if(next){const b=make('button','','СЛЕДУЮЩАЯ: '+next.title+' ↗');b.type='button';b.addEventListener('click',()=>openPage(section.id,next.id));closer.append(b);}
@@ -176,12 +261,14 @@ function entry(section,page){
  header.id='entry-top';layout.append(left,content,toc);workspace.append(layout);
 }
 function render(){
- const {section,page}=parseRoute();renderNav(section.id);workspace.replaceChildren();workspace.dataset.mode=section.id==='home'?'about':page?'entry':'catalog';
- if(section.id==='home')home();else if(!page)catalog(section);else entry(section,page);
- document.title=(page?.title||section.title)+' · Дневник Мэгги';
+ const {section,page}=parseRoute();renderNav(section.id);workspace.replaceChildren();
+ const isArchive=section.id==='archive';
+ workspace.dataset.mode=section.id==='home'?'about':(isArchive||!page)?'catalog':'entry';
+ if(section.id==='home')home();else if(isArchive||!page)catalog(section);else entry(section,page);
+ document.title=((isArchive?section.title:page?.title)||section.title)+' · Дневник Мэгги';
  const panes=workspace.querySelectorAll('.scroll-pane');panes.forEach(p=>p.scrollTop=0);
 }
-const searchIndex=db.sections.flatMap(s=>s.pages.map(p=>({s,p,hay:(s.title+' '+p.title+' '+p.lead+' '+p.blocks.map(b=>b.heading+' '+b.text).join(' ')).toLocaleLowerCase('ru')})));
+const searchIndex=db.sections.filter(s=>s.id!=='archive').flatMap(s=>s.pages.map(p=>({s,p,hay:(s.title+' '+p.title+' '+p.lead+' '+p.blocks.map(b=>b.heading+' '+b.text).join(' ')).toLocaleLowerCase('ru')})));
 function searchResultsRender(){
  const term=searchInput.value.trim().toLocaleLowerCase('ru');
  const list=term?searchIndex.filter(x=>x.hay.includes(term)):searchIndex.filter(x=>x.s.id!=='home').slice(0,8);
