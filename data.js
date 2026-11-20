@@ -42,7 +42,7 @@
       'assets/death.png'
     ],
     sectionImages: {
-      chronicle: 'assets/01-syuzhet.webp', people: 'assets/02-lyudi.webp', mysteries: 'assets/03-organizatsii.webp', diary: 'assets/04-raznoe.webp', archive: 'assets/05-arkhiv.webp'
+      chronicle: 'assets/01-syuzhet.webp', people: 'assets/03-organizatsii.webp', mysteries: 'assets/04-raznoe.webp', diary: 'assets/02-lyudi.webp', archive: 'assets/05-arkhiv.webp'
     },
     pageImages: {
       'chronicle/train': {
@@ -193,6 +193,46 @@
     'people/elias': {
       card: 'assets/elias.webp',
       cover: 'assets/elias.webp',
+    },
+    'people/lucian': {
+      card: 'assets/lucian.webp',
+      cover: 'assets/lucian.webp',
+    },
+    'people/ingrid-holt': {
+      card: 'assets/ingridd.webp',
+      cover: 'assets/ingridd.webp',
+    },
+    'people/sakharisa': {
+      card: 'assets/saharisa.webp',
+      cover: 'assets/saharisa.webp',
+    },
+    'people/eric': {
+      card: 'assets/eric.webp',
+      cover: 'assets/eric.webp',
+    },
+    'people/augustus': {
+      card: 'assets/augustus.webp',
+      cover: 'assets/augustus.webp',
+    },
+    'mysteries/wolves': {
+      card: 'assets/wolves.webp',
+      cover: 'assets/wolves.webp',
+    },
+    'mysteries/artel': {
+      card: 'assets/artel.webp',
+      cover: 'assets/artel.webp',
+    },
+    'mysteries/ministry': {
+      card: 'assets/ministry.webp',
+      cover: 'assets/ministry.webp',
+    },
+    'mysteries/babylonians': {
+      card: 'assets/babylon.webp',
+      cover: 'assets/babylon.webp',
+    },
+    'mysteries/distortions': {
+      card: 'assets/izkazhonnie.webp',
+      cover: 'assets/izkazhonnie.webp',
     }
    }
   };
