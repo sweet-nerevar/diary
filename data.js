@@ -36,7 +36,10 @@
     archiveGallery: [
       'assets/lita_postcard.png',
       'assets/isa_postcard.png',
-      'assets/agnes_postcard.png'
+      'assets/agnes_postcard.png',
+      'assets/the_star.png',
+      'assets/the_hanged_man.png',
+      'assets/death.png'
     ],
     sectionImages: {
       chronicle: 'assets/01-syuzhet.webp', people: 'assets/02-lyudi.webp', mysteries: 'assets/03-organizatsii.webp', diary: 'assets/04-raznoe.webp', archive: 'assets/05-arkhiv.webp'
@@ -65,12 +68,12 @@
     'chronicle/dream': {
       card: 'assets/maggie-dreamland.png',
       cover: 'assets/maggie-dreamland.png',
-      wide: 'assets/camelia.png'
+      wide: 'assets/camelia_fear.webp'
     },
     'chronicle/wolves': {
       card: 'assets/ogg-remorse.png',
       cover: 'assets/ogg-remorse.png',
-      wide: 'assets/conservatory-syhmbol.png'
+      wide: 'assets/conservatory-syhmbol.webp'
     },
     'chronicle/fair': {
       card: 'assets/fair-showman.png',
@@ -85,7 +88,7 @@
     'chronicle/mind': {
       card: 'assets/ship.png',
       cover: 'assets/ship.png',
-      wide: 'assets/chmonya.png'
+      wide: 'assets/chmonya.webp'
     },
     'chronicle/before-ball': {
       card: 'assets/dungeon.png',
@@ -93,18 +96,18 @@
       wide: 'assets/dragons.png'
     },
     'chronicle/ball': {
-      card: 'assets/ball-main-hall.png',
-      cover: 'assets/ball-main-hall.png',
-      wide: 'assets/dance.png'
+      card: 'assets/ball-main-hall.webp',
+      cover: 'assets/ball-main-hall.webp',
+      wide: 'assets/dance.webp'
     },
     'chronicle/after-ball': {
       card: 'assets/victoria-main-hall.png',
       cover: 'assets/victoria-main-hall.png',
-      wide: 'assets/bea-in-the-forest.png'
+      wide: 'assets/bea-in-the-forest.webp'
     },
     'chronicle/finale': {
-      card: 'assets/bea-inverse.png',
-      cover: 'assets/bea-inverse.png',
+      card: 'assets/bea-inverse.webp',
+      cover: 'assets/bea-inverse.webp',
       wide: 'assets/papers-inverse.png'
     },
     'people/victoria': {
@@ -150,6 +153,14 @@
     'people/walpurga': {
       card: 'assets/walpurga.webp',
       cover: 'assets/walpurga.webp',
+    },
+    'people/kaspar': {
+      card: 'assets/cassi.webp',
+      cover: 'assets/cassi.webp',
+    },
+    'people/agnes': {
+      card: 'assets/agnes.webp',
+      cover: 'assets/agnes.webp',
     }
    }
   };
