@@ -56,8 +56,8 @@ function home(){
  const left=make('section','about-panel scroll-pane');
  left.append(lineTitle('РАЗМЫШЛЕНИЯ:','ДАТЬ ЛЕЩА / СЛОМАТЬ КОЛЕНИ'));
  const intro=make('div','pane-body intro-prose');
- pushText(intro,'Действия - волевые, результат - поражение.','intro-text');
- intro.append(imageSlot('assets/05-arkhiv.png','INTRO ART','intro-art'));
+ pushText(intro,'WE WILL STAND TALL','intro-text');
+ intro.append(imageSlot('assets/05-arkhiv.webp','INTRO ART','intro-art'));
  pushText(intro,'Здесь собираются заметки по игровым дням, лица, места и некоторый aesthetics.','intro-text');
  pushText(intro,'*Может попасться мета-информация, но это голос свыше.','intro-text');
  left.append(intro);
