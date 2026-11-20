@@ -214,6 +214,18 @@
       card: 'assets/augustus.webp',
       cover: 'assets/augustus.webp',
     },
+    'people/owen': {
+      card: 'assets/owen.webp',
+      cover: 'assets/owen.webp',
+    },
+    'people/morrigan': {
+      card: 'assets/morrigan.webp',
+      cover: 'assets/morrigan.webp',
+    },
+      'people/darius': {
+      card: 'assets/darius.webp',
+      cover: 'assets/darius.webp',
+    },
     'mysteries/wolves': {
       card: 'assets/wolves.webp',
       cover: 'assets/wolves.webp',
