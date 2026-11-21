@@ -245,6 +245,26 @@
       card: 'assets/distorted_main.webp',
       cover: 'assets/distorted_main.webp',
       wide: 'assets/distorted.webp',
+    },
+    'diary/languages': {
+      card: 'assets/bea_st.webp',
+      cover: 'assets/bea_st.webp',
+    },
+    'diary/reflections': {
+      card: 'assets/koren.webp',
+      cover: 'assets/koren.webp',
+    },
+    'diary/silence': {
+      card: 'assets/elias_st.webp',
+      cover: 'assets/elias_st.webp',
+    },
+    'diary/rhythms': {
+      card: 'assets/owen_st.webp',
+      cover: 'assets/owen_st.webp',
+    },
+    'diary/beasts': {
+      card: 'assets/artel_story.webp',
+      cover: 'assets/artel_story.webp',
     }
    }
   };
@@ -1248,7 +1268,7 @@
 
   peopleDossiers.forEach(d => {
     const key = 'people/' + d.id;
-    if (!art.pageImages[key]) art.pageImages[key] = { card:'assets/people.png', cover:'assets/people.png', wide:'assets/people.png' };
+    if (!art.pageImages[key]) art.pageImages[key] = { card:'assets/koren.webp', cover:'assets/koren.webp', wide:'assets/people.png' };
   });
 
   const rootReflectionBlocks = [
