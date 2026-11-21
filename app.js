@@ -61,7 +61,7 @@ function home(){
  pushText(intro,'Здесь собираются заметки по игровым дням, лица, места и некоторый aesthetics.','intro-text');
  pushText(intro,'*Может попасться мета-информация, но это голос свыше.','intro-text');
  left.append(intro);
- const quote=make('div','small-callout');quote.append(lineTitle('ОН СКАЗАЛ ТЕБЕ НУЖНО СЪЕСТЬ БЕЮ, Я СКАЗАЛА ПРИКОЛЬНАЯ МЫСЛЬ:'));pushText(quote,'На данный момент игры: конец первой учебной недели, 06 сентября.','aside-quote');left.append(quote);
+ const quote=make('div','small-callout');quote.append(lineTitle('ОН СКАЗАЛ ТЕБЕ НУЖНО СЪЕСТЬ БЕЮ, Я СКАЗАЛА ПРИКОЛЬНАЯ МЫСЛЬ:'));pushText(quote,'На данный момент игры: ???, декабрь.','aside-quote');left.append(quote);
  left.append(lineTitle('ИМЕЕТСЯ:'));
  const links=make('div','home-links');db.sections.filter(s=>s.id!=='home').forEach(s=>{
   const b=make('button','home-link');b.type='button';b.append(make('span','',s.title),make('span','','↗'));b.addEventListener('click',()=>openPage(s.id,null));links.appendChild(b);
@@ -245,7 +245,7 @@ function entry(section,page){
   if(['chronicle', 'people', 'mysteries', 'diary'].includes(section.id)){block.text.split(/\n\s*\n/).filter(Boolean).forEach(t=>pushText(sectionBlock,t.trim(),'chapter-copy'));}
   else {pushText(sectionBlock,block.text,'chapter-copy');}
   content.append(sectionBlock);
-  if(i===1 && section.id!=='people'){const wide=make('figure','inline-art');wide.id='inline-art';wide.append(imageSlot(pageArt(section.id,page.id,'wide'),'[/ 16:9 ]','wide-art'));wide.append(make('figcaption','','.'));content.append(wide);}
+  if(i===1 && !['people', 'diary'].includes(section.id)){const wide=make('figure','inline-art');wide.id='inline-art';wide.append(imageSlot(pageArt(section.id,page.id,'wide'),'[/ 16:9 ]','wide-art'));wide.append(make('figcaption','','.'));content.append(wide);}
  });
  const closer=make('div','entry-end');closer.append(make('span','','✣  КОНЕЦ ЗАПИСИ'));
  const next=section.pages[section.pages.indexOf(page)+1];if(next){const b=make('button','','СЛЕДУЮЩАЯ: '+next.title+' ↗');b.type='button';b.addEventListener('click',()=>openPage(section.id,next.id));closer.append(b);}
