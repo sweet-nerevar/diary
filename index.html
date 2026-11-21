@@ -18,13 +18,22 @@ body{font-family:'Palatino Linotype','Book Antiqua',Georgia,serif}
   overflow:hidden;-webkit-tap-highlight-color:transparent;
 }
 .book-image{
-  display:none;width:auto;height:auto;
-  max-width:min(92vw,740px);max-height:90vh;
-  object-fit:contain;user-select:none;-webkit-user-drag:none;
+  display:none;
+  width:auto;
+  height:auto;
+  max-width:96vw;
+  max-height:95vh;
+  object-fit:contain;
+  user-select:none;
+  -webkit-user-drag:none;
+
+  scale:1.3;
   transform:translateY(0) rotate(0) scale(1);
   transform-origin:50% 55%;
+
   filter:drop-shadow(6px 10px 9px rgba(30,34,21,.2));
-  transition:transform .38s cubic-bezier(.2,.75,.2,1),filter .38s ease;
+  transition:transform .38s cubic-bezier(.2,.75,.2,1),
+             filter .38s ease;
   pointer-events:none;
 }
 .launch.has-image .book-image{display:block}
